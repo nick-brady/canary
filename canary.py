@@ -55,14 +55,18 @@ def handle_packet(pkt):
                 # play music, someone's home!
                 person = people[mac]
                 print(person['name'] + ' is home! lets hear it!')
+                
                 # time.sleep(60)
-                requests.get('http://127.0.0.1:5005/'+zone+'/'+spotify_track_uri+person['track_id'])
-                # http://192.168.86.89:5005/Kitchen/pause
+                req_url = 'http://127.0.0.1:5005/'+zone+'/'+spotify_track_uri+person['track_id']
+                requests.get('http://127.0.0.1:5005/clearqueue') # if item is in queue, next step breaks
+                requests.get(req_url)
+                time.sleep(30)
+                requests.get('http://127.0.0.1:5005/'+zone+'/pause')
         except KeyError:
             seen_devices[mac] = now
             last_seen = None
 
-        print_statuses(now)
+        # print_statuses(now)
 
 
 def main():
